@@ -1,0 +1,39 @@
+.MODEL SMALL
+.DATA
+String DB ‘BMCE$’
+Length EQU ($-String)
+Rvrs DB 30 DUP(0)
+Dis1 DB ‘Is not a palindrome’
+Dis2 DB ‘Is a palindrome
+.CODE
+MOV AX,@DATA
+MOV DS, AX
+MOV ES, AX
+MOV CX, Length
+LEA SI, String+Length-1
+LEA DI, Rvrs
+REPEAT: MOV AL, [SI]
+MOV [DI], AL
+DEC SI
+INC DI
+LOOP REPEAT
+LEA DX, String
+CALL Display
+LEA SI, String
+LEA DI, Rvrs
+MOV CX, Length
+REPE CMPSB
+JNZ NO
+LEA DX, Dis2
+CALL Display
+JMP OVER
+NO: LEA DX, Dis1
+CALL Display
+OVER: MOV AH, 4Ch
+INT 21h
+Display PROC NEAR
+MOV AH, 09h
+INT 21h
+RET
+Display ENDP
+END
